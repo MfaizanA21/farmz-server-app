@@ -14,7 +14,6 @@ export class BlogRepository extends Repository<Blog> {
   ) {
     super(Blog, dataSource.createEntityManager());
   }
-
   async createBlog(createBlogDto: CreateBlogDto): Promise<void> {
     const { title, content, datePosted, image, userId } = createBlogDto;
 
@@ -37,6 +36,7 @@ export class BlogRepository extends Repository<Blog> {
       content,
       datePosted,
       image: imageBuffer,
+      user: user,
     });
     try {
       await this.save(blog);
