@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Blog } from './blog.entity';
 import { DataSource, Repository } from 'typeorm';
-import { CreateBlogDto } from './create-blog.dto';
+import { CreateBlogDto } from '../create-blog.dto';
 import { UserRepository } from 'src/auth/user.repository';
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024;

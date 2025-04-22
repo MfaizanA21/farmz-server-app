@@ -7,4 +7,5 @@ export class GetBlogDto {
   firstName: string;
   lastName: string;
   email: string;
+  datePosted: Date;
 }

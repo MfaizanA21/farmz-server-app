@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { BlogService } from './blog.service';
-import { CreateBlogDto } from './create-blog.dto';
+import { CreateBlogDto } from '../create-blog.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { GetBlogDto } from './get-blog.dto';
+import { GetBlogDto } from '../get-blog.dto';
 
 @Controller('blog')
 @UseGuards(AuthGuard())
@@ -15,9 +15,22 @@ export class BlogController {
   }
 
   @Get('/get-blogs-for-user')
-  async getAll(@Query('userId') userId: string): Promise<GetBlogDto[]> {
+  async getPersonalBlogs(
+    @Query('userId') userId: string,
+  ): Promise<GetBlogDto[]> {
     const blogs = await this.blogService.getBlogsForUser(userId);
-    console.log(blogs);
+    for (const blog of blogs) {
+      console.log(blog.title);
+    }
+    return blogs;
+  }
+
+  @Get('/get-all-blogs')
+  async getOtherBlogs(@Query('userId') userId: string): Promise<GetBlogDto[]> {
+    const blogs = await this.blogService.getOtherBlogsForUser(userId);
+    for (const blog of blogs) {
+      console.log(blog.title);
+    }
     return blogs;
   }
 }
