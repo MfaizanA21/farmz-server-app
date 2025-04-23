@@ -1,20 +1,29 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from '../create-blog.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetBlogDto } from '../get-blog.dto';
 
 @Controller('blog')
-@UseGuards(AuthGuard())
 export class BlogController {
   constructor(private blogService: BlogService) {}
-
+  @UseGuards(AuthGuard())
   @Post('/create-blog')
   createBlog(@Body() createBlogDto: CreateBlogDto) {
     return this.blogService.createBlog(createBlogDto);
   }
 
   @Get('/get-blogs-for-user')
+  @UseGuards(AuthGuard())
   async getPersonalBlogs(
     @Query('userId') userId: string,
   ): Promise<GetBlogDto[]> {
@@ -28,9 +37,20 @@ export class BlogController {
   @Get('/get-all-blogs')
   async getOtherBlogs(@Query('userId') userId: string): Promise<GetBlogDto[]> {
     const blogs = await this.blogService.getOtherBlogsForUser(userId);
-    for (const blog of blogs) {
-      console.log(blog.title);
-    }
+    console.log(blogs[0].title);
     return blogs;
+  }
+
+  @Get('/get-blog')
+  async getBlogById(@Query('id') id: string): Promise<GetBlogDto> {
+    const blog = await this.blogService.getBlogById(id);
+    console.log(blog.title);
+    return blog;
+  }
+
+  @Delete('/delete-blog/:id')
+  @UseGuards(AuthGuard())
+  async DeleteBlog(@Param('id') id: string): Promise<string> {
+    return this.blogService.deleteBlog(id);
   }
 }
