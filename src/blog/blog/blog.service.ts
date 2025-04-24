@@ -6,6 +6,7 @@ import { CreateBlogDto } from '../create-blog.dto';
 import { GetBlogDto } from '../get-blog.dto';
 import { Not } from 'typeorm';
 import { Blog } from './blog.entity';
+import { EditBlogDto } from '../edit-blog.dto';
 
 @Injectable()
 export class BlogService {
@@ -91,5 +92,22 @@ export class BlogService {
     } else {
       throw new NotFoundException('No Blog Found');
     }
+  }
+
+  async editBlog(id: string, editBlogDto: EditBlogDto): Promise<string> {
+    const blog = await this.blogRepository.findOne({ where: { id } });
+
+    if (!blog) {
+      throw new NotFoundException(`Blog with ID ${id} not found`);
+    }
+
+    blog.title = editBlogDto.title;
+    blog.content = editBlogDto.content;
+
+    console.log('updated', blog.title);
+
+    await this.blogRepository.save(blog);
+
+    return id;
   }
 }

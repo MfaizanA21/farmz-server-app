@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -12,6 +13,7 @@ import { BlogService } from './blog.service';
 import { CreateBlogDto } from '../create-blog.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetBlogDto } from '../get-blog.dto';
+import { EditBlogDto } from '../edit-blog.dto';
 
 @Controller('blog')
 export class BlogController {
@@ -52,5 +54,14 @@ export class BlogController {
   @UseGuards(AuthGuard())
   async DeleteBlog(@Param('id') id: string): Promise<string> {
     return this.blogService.deleteBlog(id);
+  }
+
+  @Patch('/edit-blog/:id')
+  @UseGuards(AuthGuard())
+  async editBlog(
+    @Param('id') id: string,
+    @Body() editBlogDto: EditBlogDto,
+  ): Promise<string> {
+    return this.blogService.editBlog(id, editBlogDto);
   }
 }
